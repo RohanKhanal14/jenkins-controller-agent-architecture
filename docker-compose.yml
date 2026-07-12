@@ -11,7 +11,7 @@ services:
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=true"
     volumes:
-      - jenkins_home:/var/jenkins_home
+      - jenkins_controller_home:/var/jenkins_home
     networks:
       - jenkins-net
 
@@ -31,7 +31,7 @@ services:
       - jenkins-controller
 
 volumes:
-  jenkins_home:
+  jenkins_controller_home:
   jenkins_agent_1_home:
 
 networks:
