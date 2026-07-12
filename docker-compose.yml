@@ -1,0 +1,39 @@
+services:
+  jenkins-controller:
+    build:
+      context: .
+      dockerfile: controller/Dockerfile
+    container_name: jenkins-controller
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=true"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - jenkins-net
+
+  jenkins-agent-1:
+    build:
+      context: .
+      dockerfile: agent/Dockerfile
+    container_name: jenkins-agent-1
+    restart: unless-stopped
+    privileged: false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_agent_1_home:/home/jenkins
+    networks:
+      - jenkins-net
+    depends_on:
+      - jenkins-controller
+
+volumes:
+  jenkins_home:
+  jenkins_agent_1_home:
+
+networks:
+  jenkins-net:
+    driver: bridge
